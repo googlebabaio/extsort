@@ -1,11 +1,10 @@
 package main
 
 import (
-	"encoding/binary"
+	"bufio"
 	"fmt"
 	"github.com/googlebabaio/studygolang/zujian"
-	"io"
-	"math/rand"
+	"os"
 )
 
 func main1() {
@@ -29,53 +28,38 @@ func main2() {
 	}
 }
 
-func main() {
+func main3() {
 	p := zujian.Merge(zujian.InMemSort(zujian.ArraySource(3, 2, 5, 7)), zujian.InMemSort(zujian.ArraySource(6, 8, 1, 9)))
 	for v := range p {
 		fmt.Println(v)
 	}
 }
 
-func ReadSource(reader io.Reader) <-chan int {
+func main() {
 
-	out := make(chan int)
-
-	go func() {
-		buffer := make([]byte, 8)
-		for {
-			n, err := reader.Read(buffer)
-
-			if err != nil {
-				break
-			}
-
-			if n > 0 {
-				v := int(binary.BigEndian.Uint64(buffer))
-				out <- v
-			}
-		}
-		close(out)
-	}()
-
-	return nil
-}
-
-func WirteS(write io.WriteCloser, in <-chan int) {
-
-	for v := range in {
-		buffer := make([]byte, 8)
-		binary.BigEndian.PutUint64(buffer, uint64(v))
-		write.Write(buffer)
+	const FILENAME  = "small.in"
+	const n = 50
+	file, err := os.Create(FILENAME)
+	if err != nil {
+		panic(err)
 	}
-}
 
-func RandomSource(count int) <-chan int {
-	out := make(chan int)
+	defer file.Close()
 
-	go func() {
-		for i := 0; i < count; i++ {
-			out <- rand.Int()
-		}
-	}()
-	return out
+	p := zujian.RandomSource(n)
+	zujian.WirteSink(bufio.NewWriter(file), p)
+
+	fmt.Println("output successful!")
+
+	file, err = os.Open(FILENAME)
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	p = zujian.ReadSource(bufio.NewReader(file))
+
+	for v := range p {
+		fmt.Println(v)
+	}
 }
