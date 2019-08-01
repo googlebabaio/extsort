@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/binary"
 	"fmt"
-	"googlebaba.io/golangcookbook/zujian"
+	"github.com/googlebabaio/studygolang/zujian"
 	"io"
 	"math/rand"
 )

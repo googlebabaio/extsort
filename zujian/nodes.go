@@ -36,6 +36,9 @@ func InMemSort(in <-chan int) <-chan int {
 	return out
 }
 
+/**
+合并两个输入并输出
+ */
 func Merge(in1, in2 <-chan int) <-chan int {
 
 	out := make(chan int)
