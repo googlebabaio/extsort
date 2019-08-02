@@ -38,7 +38,7 @@ func main3() {
 func main() {
 
 	const FILENAME  = "small.in"
-	const n = 50
+	const n = 64
 	file, err := os.Create(FILENAME)
 	if err != nil {
 		panic(err)
@@ -47,10 +47,15 @@ func main() {
 	defer file.Close()
 
 	p := tools.RandomSource(n)
-	tools.WirteSink(bufio.NewWriter(file), p)
+
+	writer := bufio.NewWriter(file)
+	tools.WirteSink(writer, p)
+	writer.Flush() //这一步很重要哦，不然数据不会被写入到文件中去
+
 
 	fmt.Println("output successful!")
 
+	//测试，从写入的文件中读取数据
 	file, err = os.Open(FILENAME)
 	if err != nil {
 		panic(err)
@@ -59,7 +64,13 @@ func main() {
 
 	p = tools.ReadSource(bufio.NewReader(file),-1)
 
+	//输出前100行
+	count := 0
 	for v := range p {
 		fmt.Println(v)
+		count++
+		if count>100{
+			break
+		}
 	}
 }

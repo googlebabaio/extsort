@@ -43,7 +43,7 @@ func InMemSort(in <-chan int) <-chan int {
 
 /**
 合并两个输入并输出
- */
+*/
 func Merge(in1, in2 <-chan int) <-chan int {
 
 	out := make(chan int)
@@ -69,18 +69,17 @@ func Merge(in1, in2 <-chan int) <-chan int {
 	return out
 }
 
-
-func ReadSource(reader io.Reader,chunksize int) <-chan int {
+func ReadSource(reader io.Reader, chunksize int) <-chan int {
 
 	out := make(chan int)
 
 	go func() {
 		buffer := make([]byte, 8)
-		bytesRead:=0
+		bytesRead := 0
 		for {
 			n, err := reader.Read(buffer)
-			bytesRead+=n
-			if err != nil ||(chunksize!=-1&&bytesRead>=chunksize){
+			bytesRead += n
+			if err != nil || (chunksize != -1 && bytesRead >= chunksize) {
 				break
 			}
 
@@ -116,14 +115,14 @@ func RandomSource(count int) <-chan int {
 	return out
 }
 
-func MergeN(inputs...<-chan int)<-chan int  {
+func MergeN(inputs ...<-chan int) <-chan int {
 
-	if len(inputs)==1{
+	if len(inputs) == 1 {
 		return inputs[0]
 	}
 
-	m:=len(inputs)/2
+	m := len(inputs) / 2
 
-	return Merge(MergeN(inputs[:m]...),MergeN(inputs[m:]...))
+	return Merge(MergeN(inputs[:m]...), MergeN(inputs[m:]...))
 
 }
