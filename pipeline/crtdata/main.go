@@ -1,15 +1,15 @@
-package main
+package crtdata
 
 import (
 	"bufio"
 	"fmt"
-	"github.com/googlebabaio/extsort/zujian"
+	"github.com/googlebabaio/extsort/pipeline/tools"
 	"os"
 )
 
 func main1() {
 
-	p := zujian.ArraySource(3, 2, 5, 7, 6, 8, 1, 9)
+	p := tools.ArraySource(3, 2, 5, 7, 6, 8, 1, 9)
 
 	for {
 
@@ -22,14 +22,14 @@ func main1() {
 }
 
 func main2() {
-	p := zujian.InMemSort(zujian.ArraySource(3, 2, 5, 7, 6, 8, 1, 9))
+	p := tools.InMemSort(tools.ArraySource(3, 2, 5, 7, 6, 8, 1, 9))
 	for v := range p {
 		fmt.Println(v)
 	}
 }
 
 func main3() {
-	p := zujian.Merge(zujian.InMemSort(zujian.ArraySource(3, 2, 5, 7)), zujian.InMemSort(zujian.ArraySource(6, 8, 1, 9)))
+	p := tools.Merge(tools.InMemSort(tools.ArraySource(3, 2, 5, 7)), tools.InMemSort(tools.ArraySource(6, 8, 1, 9)))
 	for v := range p {
 		fmt.Println(v)
 	}
@@ -46,8 +46,8 @@ func main() {
 
 	defer file.Close()
 
-	p := zujian.RandomSource(n)
-	zujian.WirteSink(bufio.NewWriter(file), p)
+	p := tools.RandomSource(n)
+	tools.WirteSink(bufio.NewWriter(file), p)
 
 	fmt.Println("output successful!")
 
@@ -57,7 +57,7 @@ func main() {
 	}
 	defer file.Close()
 
-	p = zujian.ReadSource(bufio.NewReader(file),-1)
+	p = tools.ReadSource(bufio.NewReader(file),-1)
 
 	for v := range p {
 		fmt.Println(v)
