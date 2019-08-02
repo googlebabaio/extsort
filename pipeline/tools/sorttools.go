@@ -113,7 +113,6 @@ func RandomSource(count int) <-chan int {
 		}
 		close(out)
 	}()
-
 	return out
 }
 

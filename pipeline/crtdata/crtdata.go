@@ -1,4 +1,4 @@
-package crtdata
+package main
 
 import (
 	"bufio"
