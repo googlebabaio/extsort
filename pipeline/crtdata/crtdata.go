@@ -49,7 +49,7 @@ func main() {
 	p := tools.RandomSource(n)
 
 	writer := bufio.NewWriter(file)
-	tools.WirteSink(writer, p)
+	tools.WriteSink(writer, p)
 	writer.Flush() //这一步很重要哦，不然数据不会被写入到文件中去
 
 

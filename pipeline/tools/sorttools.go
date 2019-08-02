@@ -69,7 +69,7 @@ func Merge(in1, in2 <-chan int) <-chan int {
 	return out
 }
 
-func ReadSource(reader io.Reader, chunksize int) <-chan int {
+func ReadSource(reader io.Reader, chunkSize int) <-chan int {
 
 	out := make(chan int)
 
@@ -79,7 +79,7 @@ func ReadSource(reader io.Reader, chunksize int) <-chan int {
 		for {
 			n, err := reader.Read(buffer)
 			bytesRead += n
-			if err != nil || (chunksize != -1 && bytesRead >= chunksize) {
+			if err != nil || (chunkSize != -1 && bytesRead >= chunkSize) {
 				break
 			}
 
@@ -94,7 +94,7 @@ func ReadSource(reader io.Reader, chunksize int) <-chan int {
 	return out
 }
 
-func WirteSink(write io.Writer, in <-chan int) {
+func WriteSink(write io.Writer, in <-chan int) {
 
 	for v := range in {
 		buffer := make([]byte, 8)

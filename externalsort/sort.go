@@ -11,7 +11,7 @@ func main() {
 	infile := "small.in"
 	outfile := "small.out"
 	p := createPipeline(infile, 512, 4)
-	writedToFile(p, outfile)
+	writeToFile(p, outfile)
 	printFile(outfile)
 }
 
@@ -29,7 +29,7 @@ func printFile(filename string) {
 	}
 }
 
-func writedToFile(p <-chan int, filename string) {
+func writeToFile(p <-chan int, filename string) {
 	file, err := os.Create(filename)
 	if err != nil {
 		panic(err)
@@ -39,7 +39,7 @@ func writedToFile(p <-chan int, filename string) {
 	writer := bufio.NewWriter(file)
 	defer writer.Flush()
 
-	tools.WirteSink(writer, p)
+	tools.WriteSink(writer, p)
 }
 
 func createPipeline(filename string, fileSize, chunkCount int) <-chan int {
