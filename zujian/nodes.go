@@ -70,16 +70,17 @@ func Merge(in1, in2 <-chan int) <-chan int {
 }
 
 
-func ReadSource(reader io.Reader) <-chan int {
+func ReadSource(reader io.Reader,chunksize int) <-chan int {
 
 	out := make(chan int)
 
 	go func() {
 		buffer := make([]byte, 8)
+		bytesRead:=0
 		for {
 			n, err := reader.Read(buffer)
-
-			if err != nil {
+			bytesRead+=n
+			if err != nil ||(chunksize!=-1&&bytesRead>=chunksize){
 				break
 			}
 
@@ -116,7 +117,7 @@ func RandomSource(count int) <-chan int {
 	return out
 }
 
-func MergeN(inputs...chan int)<-chan int  {
+func MergeN(inputs...<-chan int)<-chan int  {
 
 	if len(inputs)==1{
 		return inputs[0]

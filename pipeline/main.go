@@ -3,7 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"github.com/googlebabaio/studygolang/zujian"
+	"github.com/googlebabaio/extsort/zujian"
 	"os"
 )
 
@@ -57,7 +57,7 @@ func main() {
 	}
 	defer file.Close()
 
-	p = zujian.ReadSource(bufio.NewReader(file))
+	p = zujian.ReadSource(bufio.NewReader(file),-1)
 
 	for v := range p {
 		fmt.Println(v)
