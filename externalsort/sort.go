@@ -42,6 +42,9 @@ func writeToFile(p <-chan int, filename string) {
 	tools.WriteSink(writer, p)
 }
 
+//chunkCount
+//chunkSize
+//
 func createPipeline(filename string, fileSize, chunkCount int) <-chan int {
 
 	chunkSize := fileSize / chunkCount
