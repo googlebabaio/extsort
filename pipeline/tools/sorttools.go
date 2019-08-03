@@ -79,13 +79,15 @@ func ReadSource(reader io.Reader, chunkSize int) <-chan int {
 		for {
 			n, err := reader.Read(buffer)
 			bytesRead += n
-			if err != nil || (chunkSize != -1 && bytesRead >= chunkSize) {
-				break
-			}
 
+			//注意和下面的判断的顺序
 			if n > 0 {
 				v := int(binary.BigEndian.Uint64(buffer))
 				out <- v
+			}
+
+			if err != nil || (chunkSize != -1 && bytesRead >= chunkSize) {
+				break
 			}
 		}
 		close(out)
