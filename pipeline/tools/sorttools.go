@@ -1,11 +1,21 @@
 package tools
 
 import (
+	"bufio"
 	"encoding/binary"
+	"fmt"
 	"io"
 	"math/rand"
+	"net"
 	"sort"
+	"time"
 )
+
+var startTime time.Time
+
+func InitTime()  {
+	startTime=time.Now()
+}
 
 func ArraySource(a ...int) <-chan int {
 	out := make(chan int)
@@ -29,7 +39,9 @@ func InMemSort(in <-chan int) <-chan int {
 		}
 
 		//内存中排序
+		fmt.Println("Read done",time.Now().Sub(startTime))
 		sort.Ints(a)
+		fmt.Println("InMemSort done",time.Now().Sub(startTime))
 
 		//将排好序的值，再扔回给 channel
 		for _, v := range a {
@@ -63,7 +75,7 @@ func Merge(in1, in2 <-chan int) <-chan int {
 			}
 		}
 		close(out)
-
+		fmt.Println("Merge done",time.Now().Sub(startTime))
 	}()
 
 	return out
@@ -128,3 +140,39 @@ func MergeN(inputs ...<-chan int) <-chan int {
 	return Merge(MergeN(inputs[:m]...), MergeN(inputs[m:]...))
 
 }
+
+func NetworkSink(addr string , in <-chan int){
+	listener , err := net.Listen("tcp",addr)
+	if err != nil{
+		panic(err)
+	}
+	go func(){
+		defer listener.Close()
+		conn , err := listener.Accept()
+		if err != nil{
+			panic(err)
+		}
+		defer conn.Close()
+		writer := bufio.NewWriter(conn)
+		defer writer.Flush()
+		WriteSink(writer,in)
+	}()
+
+}
+
+func NetworkSource(addr string) <-chan int{
+	out := make(chan int)
+	go func(){
+		conn , err := net.Dial("tcp",addr)
+		if err != nil{
+			panic(err)
+		}
+		r := ReadSource(bufio.NewReader(conn),-1)
+		for v := range r{
+			out <- v
+		}
+		close(out)
+	}()
+	return out
+}
+
