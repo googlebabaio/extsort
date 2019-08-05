@@ -9,9 +9,10 @@ import (
 )
 
 func main() {
-	infile := "small.in"
-	outfile := "small.out"
-	p := createPipeline(infile, 512, 4)
+	infile := "big.in"
+	outfile := "big.out"
+	//p := createPipeline(infile, 512, 4)
+	p := createNetworkPipeline(infile, 512, 4)
 	writeToFile(p, outfile)
 	printFile(outfile)
 }
@@ -81,7 +82,7 @@ func createNetworkPipeline(filename string, fileSize, chunkCount int) <-chan int
 		file.Seek(int64(i*chunkSize), 0)
 		source := tools.ReadSource(
 			bufio.NewReader(file), chunkSize)
-		addr := ":" + strconv.Itoa(7000+i)
+		addr := ":" + strconv.Itoa(7777+i)
 		// 塞给网络服务器
 		tools.NetworkSink(addr, tools.InMemSort(source))
 		sortAddr = append(sortAddr, addr)
