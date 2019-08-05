@@ -37,7 +37,7 @@ func main3() {
 
 func main() {
 
-	const FILENAME  = "small.in"
+	const FILENAME  = "big.in"
 	const n = 64
 	file, err := os.Create(FILENAME)
 	if err != nil {
